@@ -1,8 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
-from src.attacks.utils import clip_perturbation
+from torch.utils.data import RandomSampler
 
 
 def fgsm_attack(model, images, labels, epsilon=0.02, targeted=False):
@@ -52,18 +51,25 @@ def fgsm_attack(model, images, labels, epsilon=0.02, targeted=False):
         perturbation = epsilon * grad_sign
     
     # Add perturbation to original images
-    adversarial_images = images + perturbation
+    # IMPORTANT: Don't use adversarial_images here since it has gradients attached
+    # Instead, use the original images directly
+    adversarial_examples = images.clone().detach() + perturbation
     
     # Clip to ensure valid pixel range
-    adversarial_images = torch.clamp(adversarial_images, 0, 1)
+    adversarial_examples = torch.clamp(adversarial_examples, 0, 1)
     
-    # Ensure perturbation is within epsilon ball
+    # Double-check the perturbation is exactly within epsilon ball
     # This explicitly enforces: ||x_adv - x||_∞ <= epsilon
-    delta = adversarial_images - images
+    delta = adversarial_examples - images
     delta = torch.clamp(delta, -epsilon, epsilon)
-    adversarial_images = images + delta
+    adversarial_examples = images + delta
     
-    return adversarial_images.detach()
+    # Verify L-infinity constraint is satisfied
+    l_inf_distance = (adversarial_examples - images).abs().max().item()
+    if l_inf_distance > epsilon + 1e-5:  # Allow small numerical error
+        print(f"WARNING: L_inf constraint violated! {l_inf_distance} > {epsilon}")
+    
+    return adversarial_examples.detach()
 
 
 def generate_fgsm_examples(model, dataloader, epsilon=0.02, targeted=False, device='cuda'):
@@ -95,7 +101,7 @@ def generate_fgsm_examples(model, dataloader, epsilon=0.02, targeted=False, devi
     
     # Importantly, we need to disable dataloader shuffling to ensure
     # image order remains consistent across batches
-    dataloader_shuffling_state = dataloader.shuffle
+    dataloader_shuffling_state = getattr(dataloader, 'shuffle', False)
     if dataloader_shuffling_state:
         print("Warning: Disabling dataloader shuffling for consistent adversarial example generation")
         dataloader.shuffle = False
@@ -139,4 +145,28 @@ def generate_fgsm_examples(model, dataloader, epsilon=0.02, targeted=False, devi
     successful_mask = all_orig_preds != all_adv_preds
     successful_idxs = torch.nonzero(successful_mask).squeeze()
     
-    return all_adv_images, all_orig_images, all_orig_labels, all_orig_preds, all_adv_preds, successful_idxs 
+    return all_adv_images, all_orig_images, all_orig_labels, all_orig_preds, all_adv_preds, successful_idxs
+
+
+def compute_linf_distance(adv, orig, mean, std, denormalize=False):
+    """
+    Compute L-infinity distance between original and adversarial examples.
+
+    Args:
+        adv (torch.Tensor): Adversarial images (B, C, H, W).
+        orig (torch.Tensor): Original images (B, C, H, W).
+        mean (list of float): Mean used in normalization.
+        std (list of float): Std used in normalization.
+        denormalize (bool): Whether to compute distance in pixel space.
+
+    Returns:
+        float: Maximum L-infinity distance over the batch.
+    """
+    if denormalize:
+        mean = torch.tensor(mean).view(1, -1, 1, 1).to(orig.device)
+        std = torch.tensor(std).view(1, -1, 1, 1).to(orig.device)
+        adv = adv * std + mean
+        orig = orig * std + mean
+
+    linf = (adv - orig).abs().view(adv.size(0), -1).max(dim=1)[0]
+    return linf.max().item()
