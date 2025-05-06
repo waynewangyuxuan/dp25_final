@@ -1,0 +1,150 @@
+Logging to /scratch/yw5954/dp25_final/logging/task2_fgsm_20250506_132408.log
+Loading ResNet-34 model...
+Model loaded with output size: 1000
+Creating dataset...
+Dataset size: 500
+
+DEBUG INFO:
+Dataset classes: ['n02672831', 'n02676566', 'n02687172', 'n02690373', 'n02692877']... (total: 100)
+Number of samples: 500
+First few class_idx_to_name entries: [(401, 'accordion'), (402, 'acoustic guitar'), (403, 'aircraft carrier'), (404, 'airliner'), (405, 'airship')]
+Labels list sample: ['401: accordion', '402: acoustic guitar']
+Class 0: n02672831
+Class 1: n02676566
+Class 2: n02687172
+Class 3: n02690373
+Class 4: n02692877
+Generating adversarial examples with FGSM (epsilon=0.02)...
+Evaluating model on original images...
+Original Top-1 Accuracy: 76.00%
+Original Top-5 Accuracy: 94.20%
+Generating and evaluating adversarial examples...
+
+FIRST BATCH DEBUG:
+
+Image 0:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 99.97%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 881, 579, 541, 652]
+  Is in top 5: True
+
+Image 1:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 98.68%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 753, 811, 867, 807]
+  Is in top 5: True
+
+Image 2:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 819
+  Model confidence: 84.45%
+  Prediction class name: Unknown
+  Is correct: False
+  Top 5 predictions: [819, 862, 854, 401, 818]
+  Is in top 5: True
+
+Image 3:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 100.00%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 584, 593, 878, 524]
+  Is in top 5: True
+
+Image 4:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 398
+  Model confidence: 30.07%
+  Prediction class name: Unknown
+  Is correct: False
+  Top 5 predictions: [398, 800, 754, 891, 848]
+  Is in top 5: False
+Batch L-infinity distance: 0.020000
+
+FIRST BATCH ADVERSARIAL RESULTS:
+
+Image 0:
+  True class: accordion (idx: 401)
+  Original prediction: accordion (401) with 99.97% confidence
+  Adversarial prediction: accordion (401) with 99.89% confidence
+  Attack successful: False
+  Perturbation magnitude: 0.020000
+
+Image 1:
+  True class: accordion (idx: 401)
+  Original prediction: accordion (401) with 98.68% confidence
+  Adversarial prediction: accordion (401) with 89.51% confidence
+  Attack successful: False
+  Perturbation magnitude: 0.020000
+
+Image 2:
+  True class: accordion (idx: 401)
+  Original prediction: Unknown (819) with 84.45% confidence
+  Adversarial prediction: Unknown (819) with 90.02% confidence
+  Attack successful: False
+  Perturbation magnitude: 0.020000
+
+Image 3:
+  True class: accordion (idx: 401)
+  Original prediction: accordion (401) with 100.00% confidence
+  Adversarial prediction: accordion (401) with 99.97% confidence
+  Attack successful: False
+  Perturbation magnitude: 0.020000
+
+Image 4:
+  True class: accordion (idx: 401)
+  Original prediction: Unknown (398) with 30.07% confidence
+  Adversarial prediction: Unknown (398) with 42.42% confidence
+  Attack successful: False
+  Perturbation magnitude: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+Batch L-infinity distance: 0.020000
+
+Attack Results:
+Maximum L-infinity distance: 0.020000
+Original Test Set - Top-1 Accuracy: 76.00%
+Original Test Set - Top-5 Accuracy: 94.20%
+Adversarial Test Set - Top-1 Accuracy: 6.80%
+Adversarial Test Set - Top-5 Accuracy: 11.80%
+Top-1 Accuracy Drop: 69.20%
+Top-5 Accuracy Drop: 82.40%
+Visualization saved to ./figures/task2/successful_attacks.png
+Successful attack examples saved to ./figures/task2/successful_attacks.png
+L-infinity distance histogram saved to ./figures/task2/l_infinity_distances.png
+Adversarial perturbations visualization saved to ./figures/task2/adversarial_perturbations.png
+Saving adversarial examples to data/adversarial_test_set_1...
+Verifying saved adversarial examples...
+Number of class directories: 100
+Sample class 'n02808304' has 5 images
+First few images: ['n02808304_1034.JPEG', 'n02808304_1023.JPEG', 'n02808304_10239.JPEG', 'n02808304_10151.JPEG', 'n02808304_10209.JPEG']
+Results saved to logs/fgsm_results.json

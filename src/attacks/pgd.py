@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from torch.utils.data import RandomSampler
 
 
-def pgd_attack(model, images, labels, epsilon=0.02, alpha=0.005, iterations=10, targeted=False, random_start=True):
+def pgd_attack(model, images, labels, epsilon=0.02, alpha=0.005, iterations=10, targeted=False, random_start=True, verbose=True):
     """
     Implements the Projected Gradient Descent (PGD) attack.
     
@@ -17,6 +17,7 @@ def pgd_attack(model, images, labels, epsilon=0.02, alpha=0.005, iterations=10, 
         iterations: Number of iterations (default: 10)
         targeted: Whether to perform a targeted attack (default: False)
         random_start: Whether to start with a random perturbation (default: True)
+        verbose: Whether to print progress information (default: True)
     
     Returns:
         adversarial_images: Perturbed input images
@@ -58,9 +59,13 @@ def pgd_attack(model, images, labels, epsilon=0.02, alpha=0.005, iterations=10, 
         # Convert back to normalized space
         adversarial_images = (adv_images_pixel - mean_tensor) / std_tensor
     
-    # Track attack progress
-    if iterations > 0:
-        print(f"PGD Attack Progress:")
+    # Track attack progress with simplified output
+    if iterations > 0 and verbose:
+        # Print just once before iterations start
+        print(f"Starting PGD attack with epsilon={epsilon:.4f}, iterations={iterations}")
+    
+    # For tracking progress efficiently
+    start_accuracy = None
     
     for i in range(iterations):
         # Enable gradient computation for fresh gradient calculation
@@ -71,7 +76,7 @@ def pgd_attack(model, images, labels, epsilon=0.02, alpha=0.005, iterations=10, 
         # Forward pass
         outputs = model(adversarial_images)
         
-        # Calculate loss
+        # Calculate loss - for the attack direction
         if targeted:
             # For targeted attacks, we want to minimize loss (maximize prob of target class)
             loss = -F.cross_entropy(outputs, labels)
@@ -107,18 +112,31 @@ def pgd_attack(model, images, labels, epsilon=0.02, alpha=0.005, iterations=10, 
         # Convert back to normalized space
         adversarial_images = (adv_images_pixel - mean_tensor) / std_tensor
         
-        # Print progress for a few iterations
-        if i == 0 or i == iterations - 1 or (iterations > 10 and i % (iterations // 5) == 0):
+        # Only print at the start, middle, and end of the process to avoid flooding terminal
+        if verbose and (i == 0 or i == iterations - 1 or i == iterations // 2):
             with torch.no_grad():
                 outputs = model(adversarial_images)
                 _, preds = torch.max(outputs, 1)
+                
+                # Calculate accuracy - Important: For untargeted attacks, we need to check against true labels
+                # This ensures we're measuring actual model accuracy, not how close we are to targets
                 accuracy = (preds == labels).float().mean().item() * 100
                 
                 # Maximum perturbation (in pixel space)
                 delta_pixel = (adversarial_images * std_tensor + mean_tensor) - (x_natural * std_tensor + mean_tensor)
                 max_perturbation = delta_pixel.abs().max().item()
                 
-                print(f"  Iteration {i+1}/{iterations}: Current accuracy: {accuracy:.2f}%, Max perturbation: {max_perturbation:.6f}")
+                # Store starting accuracy
+                if i == 0:
+                    start_accuracy = accuracy
+                
+                # Only print at key points
+                if i == 0:
+                    print(f"  Initial accuracy: {accuracy:.2f}%")
+                elif i == iterations - 1:
+                    print(f"  Final accuracy: {accuracy:.2f}% (drop of {start_accuracy - accuracy:.2f}%), Max L∞: {max_perturbation:.6f}")
+                else:
+                    print(f"  Progress [{i+1}/{iterations}]: accuracy: {accuracy:.2f}%")
     
     # Verify L-infinity constraint is satisfied (in pixel space)
     adv_pixel = adversarial_images * std_tensor + mean_tensor
@@ -126,7 +144,7 @@ def pgd_attack(model, images, labels, epsilon=0.02, alpha=0.005, iterations=10, 
     delta_pixel = adv_pixel - orig_pixel
     l_inf_distance = delta_pixel.abs().max().item()
     
-    if l_inf_distance > epsilon + 1e-5:  # Allow small numerical error
+    if l_inf_distance > epsilon + 1e-5 and verbose:  # Allow small numerical error
         print(f"WARNING: L_inf constraint violated! {l_inf_distance:.6f} > {epsilon}")
     
     return adversarial_images.detach()

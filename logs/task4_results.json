@@ -1,0 +1,15 @@
+{
+    "task": "Task 4: Patch Attack",
+    "epsilon": 0.8,
+    "targeted": false,
+    "patch_size": 32,
+    "original_top1_accuracy": 76.0,
+    "original_top5_accuracy": 94.2,
+    "adversarial_top1_accuracy": 6.6,
+    "adversarial_top5_accuracy": 39.8,
+    "top1_accuracy_drop": 69.4,
+    "top5_accuracy_drop": 54.400000000000006,
+    "attack_success_rate": 82.0,
+    "avg_l_inf_distance": 0.7942471504211426,
+    "max_l_inf_distance": 0.8000000715255737
+}

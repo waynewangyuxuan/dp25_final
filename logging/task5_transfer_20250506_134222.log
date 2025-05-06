@@ -1,0 +1,244 @@
+Logging to /scratch/yw5954/dp25_final/logging/task5_transfer_20250506_134222.log
+Loading DenseNet-121 model...
+Model loaded with output size: 1000
+Loading original dataset...
+
+DEBUG INFO:
+Dataset classes: ['n02672831', 'n02676566', 'n02687172', 'n02690373', 'n02692877']... (total: 100)
+Number of samples: 500
+First few class_idx_to_name entries: [(401, 'accordion'), (402, 'acoustic guitar'), (403, 'aircraft carrier'), (404, 'airliner'), (405, 'airship')]
+Labels list sample: ['401: accordion', '402: acoustic guitar']
+Class 0: n02672831
+Class 1: n02676566
+Class 2: n02687172
+Class 3: n02690373
+Class 4: n02692877
+
+Transfer Evaluation Results:
+============================================================
+Dataset             Top-1 Accuracy      Top-5 Accuracy      
+------------------------------------------------------------
+
+Evaluating Original dataset:
+----------------------------------------
+
+ORIGINAL FIRST BATCH DEBUG:
+
+Image 0:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 99.91%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 699, 881, 594, 687]
+  Is in top 5: True
+
+Image 1:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 98.87%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 753, 807, 811, 481]
+  Is in top 5: True
+
+Image 2:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 819
+  Model confidence: 60.30%
+  Prediction class name: Unknown_819
+  Is correct: False
+  Top 5 predictions: [819, 401, 862, 875, 854]
+  Is in top 5: True
+
+Image 3:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 99.75%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 546, 699, 819, 692]
+  Is in top 5: True
+
+Image 4:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 810
+  Model confidence: 29.20%
+  Prediction class name: Unknown_810
+  Is correct: False
+  Top 5 predictions: [810, 398, 848, 482, 878]
+  Is in top 5: False
+
+Original            74.80     %         93.60     %         
+
+Evaluating FGSM (ε=0.02) dataset:
+----------------------------------------
+
+FGSM (Ε=0.02) FIRST BATCH DEBUG:
+
+Image 0:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 99.91%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 699, 881, 594, 687]
+  Is in top 5: True
+
+Image 1:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 98.70%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 753, 807, 811, 854]
+  Is in top 5: True
+
+Image 2:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 819
+  Model confidence: 61.79%
+  Prediction class name: Unknown_819
+  Is correct: False
+  Top 5 predictions: [819, 401, 862, 875, 854]
+  Is in top 5: True
+
+Image 3:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 99.72%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 546, 819, 699, 676]
+  Is in top 5: True
+
+Image 4:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 810
+  Model confidence: 31.62%
+  Prediction class name: Unknown_810
+  Is correct: False
+  Top 5 predictions: [810, 398, 848, 482, 878]
+  Is in top 5: False
+
+FGSM (ε=0.02)       74.00     %         93.20     %         
+
+Evaluating PGD (ε=0.02) dataset:
+----------------------------------------
+
+PGD (Ε=0.02) FIRST BATCH DEBUG:
+
+Image 0:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 99.89%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 699, 594, 881, 687]
+  Is in top 5: True
+
+Image 1:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 90.09%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 753, 854, 807, 811]
+  Is in top 5: True
+
+Image 2:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 819
+  Model confidence: 91.12%
+  Prediction class name: Unknown_819
+  Is correct: False
+  Top 5 predictions: [819, 854, 401, 862, 498]
+  Is in top 5: True
+
+Image 3:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 99.72%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 546, 699, 692, 767]
+  Is in top 5: True
+
+Image 4:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 398
+  Model confidence: 46.41%
+  Prediction class name: Unknown_398
+  Is correct: False
+  Top 5 predictions: [398, 810, 848, 482, 781]
+  Is in top 5: False
+
+PGD (ε=0.02)        56.20     %         85.40     %         
+
+Evaluating Patch (ε=0.3) dataset:
+----------------------------------------
+
+PATCH (Ε=0.3) FIRST BATCH DEBUG:
+
+Warning: Could not find ImageNet mapping for Band Aid
+Warning: Could not find ImageNet mapping for Band Aid
+Warning: Could not find ImageNet mapping for Band Aid
+Warning: Could not find ImageNet mapping for Band Aid
+Warning: Could not find ImageNet mapping for Band Aid
+Patch (ε=0.3)       34.10     %         45.40     %         
+============================================================
+
+Results saved to logs/task5_transfer_results.json
+Visualization saved to ./figures/task5/transfer_results.png
+
+Transferability Analysis:
+============================================================
+Dataset             Transfer Rate       Effectiveness       
+------------------------------------------------------------
+FGSM (ε=0.02)       1.1       %         Limited             
+PGD (ε=0.02)        24.9      %         Limited             
+Patch (ε=0.3)       54.4      %         Moderate            
+============================================================
+
+Overall Findings:
+------------------------------------------------------------
+- Total attacks evaluated: 3
+- Attacks with excellent transferability: 0
+- Attacks with good transferability: 0
+- Attacks with moderate transferability: 1
+- Attacks with limited transferability: 2
+
+Key insight: The DenseNet-121 model shows resistance to transfer attacks,
+suggesting that model diversity is an effective defense strategy.
+
+Task 5 completed successfully at 2025-05-06 13:42:30!

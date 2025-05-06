@@ -274,7 +274,7 @@ Our implementation includes several enhancements:
   - α = 0.004 (step size)
   - iterations = 20
   - targeted = False (untargeted attack)
-  - random_start = False
+  - random_start = True (with 25% of epsilon)
 - **Implementation**: `experiments/task3_advanced_attack.py` and `src/attacks/pgd.py`
 - **Output**: "Adversarial Test Set 2" saved to `data/adversarial_test_set_2/`
 
@@ -282,14 +282,24 @@ Our implementation includes several enhancements:
 
 | Metric | Original Images | FGSM (Task 2) | PGD (Task 3) |
 |--------|----------------|--------------|--------------|
-| Top-1 Accuracy | 76.00% | 6.80% | 27.80% |
-| Top-5 Accuracy | 94.20% | 20.60% | 38.60% |
+| Top-1 Accuracy | 76.00% | 6.80% | 0.00% |
+| Top-5 Accuracy | 94.20% | 20.60% | 0.00% |
 | Max L∞ Distance | - | 0.02 | 0.02 |
-| Relative Accuracy Drop | - | 91.05% | 63.42% |
+| Relative Accuracy Drop | - | 91.05% | 100.00% |
 
-Surprisingly, our PGD implementation achieved a relative accuracy drop of 63.42% for top-1 accuracy and 59.03% for top-5 accuracy, which is significant but not as dramatic as the FGSM attack. This was unexpected, as iterative attacks like PGD typically outperform single-step attacks like FGSM.
+Our improved PGD implementation achieved complete model failure, reducing accuracy to 0.00% (top-1) and 0.00% (top-5) - a perfect 100% attack success rate while strictly adhering to the ε=0.02 constraint.
 
-The counterintuitive result might be attributed to the omission of random initialization (random_start=False) in our implementation, which can make the attack converge to suboptimal local maxima of the loss. Nevertheless, our PGD implementation still exceeds the target of 50% accuracy reduction while strictly respecting the L-infinity constraint of 0.02.
+The dramatic improvement over our initial PGD implementation is attributed to several critical fixes:
+
+1. **Proper normalization handling**: We now correctly convert epsilon from pixel space to normalized space for each channel, accounting for the different standard deviations used in ImageNet normalization.
+
+2. **Effective random initialization**: Adding small random noise within 25% of the epsilon bound helps escape local optima and provides better starting points for the attack.
+
+3. **Prevention of gradient accumulation**: We ensured proper detachment between iterations to maintain clean gradient directions.
+
+4. **Optimized attack parameters**: Using 20 iterations with a carefully tuned step size provides excellent convergence.
+
+These technical improvements demonstrate how subtle implementation details can dramatically affect attack effectiveness, even when the underlying algorithm remains the same.
 
 #### Visualizations
 
@@ -403,9 +413,64 @@ The script will:
 6. Save results to `logs/task4_results.json`
 
 5. **Task 5: Transferability**
-   - Evaluate a different model (e.g., DenseNet-121)
-   - Report accuracy on original and adversarial datasets
-   - Discuss findings and mitigation strategies
+
+### Implementation Details
+
+For Task 5, we evaluated the transferability of our adversarial attacks by testing them on a different model architecture - DenseNet-121 instead of the ResNet-34 used in previous tasks. This helps us assess whether adversarial examples generated for one model can successfully fool a different model, which has significant implications for real-world security.
+
+#### Key Components
+
+- **Original Model**: ResNet-34 (used to generate adversarial examples in Tasks 2-4)
+- **Transfer Model**: DenseNet-121 (different architecture for transfer testing)
+- **Datasets**: Original test set and all three adversarial test sets (FGSM, PGD, and Patch)
+- **Metrics**: Top-1 and Top-5 accuracy, transfer rate, effectiveness categorization
+- **Implementation**: `experiments/task5_transfer.py`
+
+#### Transfer Effectiveness Categories
+
+We categorized transfer effectiveness based on the accuracy drop compared to the original dataset:
+- **Excellent**: ≥90% of the original attack's effectiveness transfers
+- **Good**: 70-89% transfers
+- **Moderate**: 40-69% transfers
+- **Limited**: <40% transfers
+
+#### Results
+
+| Dataset | Top-1 Accuracy | Top-5 Accuracy | Transfer Rate | Effectiveness |
+|---------|---------------|---------------|--------------|--------------|
+| Original Images | 74.8% | 93.6% | - | - |
+| FGSM (ε=0.02) | 74.0% | 93.2% | 1.1% | Limited |
+| PGD (ε=0.02) | 56.2% | 85.4% | 24.9% | Limited |
+| Patch (ε=0.3) | 34.1% | 45.4% | 54.4% | Moderate |
+
+These results reveal several important insights:
+
+1. **Architecture Differences Matter**: DenseNet-121 shows significant robustness against adversarial examples generated for ResNet-34, especially for gradient-based attacks (FGSM and PGD).
+
+2. **FGSM Transfer is Poor**: The simple FGSM attack barely transfers at all, showing only a 1.1% accuracy drop on DenseNet-121.
+
+3. **PGD Transfers Better**: The more advanced PGD attack shows limited but noticeable transferability (24.9% accuracy drop).
+
+4. **Patch Attacks Transfer Best**: Surprisingly, the patch-based attack shows the highest transferability with a moderate 54.4% transfer rate. This suggests that localized perturbations may be more robust across model architectures than full-image perturbations.
+
+These findings underscore the potential of model diversity as a defense mechanism against adversarial attacks, while also highlighting that some attack types (particularly patch-based attacks) pose a greater cross-model threat.
+
+### Usage
+
+To run the transferability evaluation:
+
+```bash
+source act.sh
+python experiments/task5_transfer.py
+```
+
+The script will:
+1. Load the DenseNet-121 model
+2. Evaluate the model on the original test set
+3. Evaluate the model on all three adversarial test sets
+4. Generate visualizations comparing performance across datasets
+5. Save results to `logs/task5_transfer_results.json`
+6. Provide a detailed transferability analysis
 
 ## Setup and Usage
 
@@ -452,10 +517,17 @@ Our project demonstrates the vulnerability of state-of-the-art deep neural netwo
 
 2. **FGSM Attack (Task 2)**: Using a simple one-step attack with ε=0.02, we dramatically reduced model accuracy to 6.80% (top-1) and 20.60% (top-5), a relative drop of 91.05%.
 
-3. **PGD Attack (Task 3)**: Our iterative attack without random initialization reduced model accuracy to 27.80% (top-1) and 38.60% (top-5) - unexpectedly less effective than FGSM but still significant.
+3. **PGD Attack (Task 3)**: Our improved PGD implementation achieved complete model failure, reducing accuracy to 0.00% (top-1) and 0.00% (top-5) - a perfect 100% attack success rate while strictly adhering to the ε=0.02 constraint.
 
-4. **Imperceptible Perturbations**: All adversarial examples look indistinguishable from the original images to human observers, yet completely fool the model.
+4. **Patch Attack (Task 4)**: Even when perturbations were restricted to a small 32×32 patch, we achieved significant accuracy drops using a higher epsilon value, demonstrating the vulnerability of models to localized perturbations.
 
-5. **Attack Insights**: The unexpected superiority of FGSM over PGD in our implementation highlights the importance of proper attack configuration, particularly the use of random initialization in iterative attacks.
+5. **Transferability Analysis (Task 5)**: We found varying degrees of transferability across different attack methods:
+   - The patch-based attack showed the highest transferability (54.4%) to DenseNet-121, despite being more constrained spatially
+   - PGD showed limited transferability (24.9%), while FGSM barely transferred at all (1.1%)
+   - This suggests that localized perturbations may cross architectural boundaries more effectively than full-image perturbations, an important finding for adversarial robustness research
 
-The results highlight that even the strongest image classification models remain vulnerable to carefully crafted adversarial examples. The fact that such small, imperceptible perturbations can cause advanced models to make incorrect predictions raises important questions about the robustness and security of deep learning systems in real-world applications.
+6. **Imperceptible Perturbations**: All adversarial examples look indistinguishable from the original images to human observers, yet completely fool the model.
+
+7. **Implementation Insights**: Our work highlights the critical importance of implementation details in adversarial attacks, particularly proper handling of normalization, random initialization, and gradient accumulation. Small changes in implementation can dramatically affect attack success rates.
+
+The results highlight that even the strongest image classification models remain vulnerable to carefully crafted adversarial examples. The fact that such small, imperceptible perturbations can cause advanced models to make incorrect predictions raises important questions about the robustness and security of deep learning systems in real-world applications. Additionally, the surprising transferability of patch-based attacks suggests that model diversity alone may not be sufficient as a defense mechanism against all types of adversarial attacks.

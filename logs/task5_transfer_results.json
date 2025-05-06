@@ -1,0 +1,40 @@
+{
+    "model": "DenseNet-121",
+    "datasets": [
+        {
+            "name": "Original",
+            "path": "./data/TestDataSet",
+            "exists": true,
+            "top1_accuracy": 74.8,
+            "top5_accuracy": 93.6
+        },
+        {
+            "name": "FGSM (\u03b5=0.02)",
+            "path": "./data/adversarial_test_set_1",
+            "exists": true,
+            "top1_accuracy": 74.0,
+            "top5_accuracy": 93.2
+        },
+        {
+            "name": "PGD (\u03b5=0.02)",
+            "path": "./data/adversarial_test_set_2",
+            "exists": true,
+            "top1_accuracy": 56.2,
+            "top5_accuracy": 85.4
+        },
+        {
+            "name": "Patch (\u03b5=0.3)",
+            "path": "./data/adversarial_test_set_3",
+            "exists": true,
+            "top1_accuracy": 34.1,
+            "top5_accuracy": 45.4
+        }
+    ],
+    "transfer_summary": {
+        "excellent": 0,
+        "good": 0,
+        "moderate": 1,
+        "limited": 2
+    },
+    "timestamp": "2025-05-06 13:42:30"
+}

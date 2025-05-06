@@ -1,0 +1,194 @@
+Logging to /scratch/yw5954/dp25_final/logging/task3_advanced_attack_20250506_132042.log
+Loading ResNet-34 model...
+Model loaded with output size: 1000
+Creating dataset...
+Dataset size: 500
+
+DEBUG INFO:
+Dataset classes: ['n02672831', 'n02676566', 'n02687172', 'n02690373', 'n02692877']... (total: 100)
+Number of samples: 500
+First few class_idx_to_name entries: [(401, 'accordion'), (402, 'acoustic guitar'), (403, 'aircraft carrier'), (404, 'airliner'), (405, 'airship')]
+Labels list sample: ['401: accordion', '402: acoustic guitar']
+Class 0: n02672831
+Class 1: n02676566
+Class 2: n02687172
+Class 3: n02690373
+Class 4: n02692877
+Evaluating model on original images...
+Original Top-1 Accuracy: 76.00%
+Original Top-5 Accuracy: 94.20%
+Generating and evaluating adversarial examples using PGD with ε=0.02, α=0.004, steps=20, random_start=True...
+
+FIRST BATCH DEBUG:
+
+Image 0:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 99.97%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 881, 579, 541, 652]
+  Is in top 5: True
+
+Image 1:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 98.68%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 753, 811, 867, 807]
+  Is in top 5: True
+
+Image 2:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 819
+  Model confidence: 84.45%
+  Prediction class name: Unknown
+  Is correct: False
+  Top 5 predictions: [819, 862, 854, 401, 818]
+  Is in top 5: True
+
+Image 3:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 401
+  Model confidence: 100.00%
+  Prediction class name: accordion
+  Is correct: True
+  Top 5 predictions: [401, 584, 593, 878, 524]
+  Is in top 5: True
+
+Image 4:
+  Folder index: 0, Folder name: n02672831
+  Mapped ImageNet index: 401
+  ImageNet class name: accordion
+  Model prediction: 398
+  Model confidence: 30.07%
+  Prediction class name: Unknown
+  Is correct: False
+  Top 5 predictions: [398, 800, 754, 891, 848]
+  Is in top 5: False
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 12.50%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 12.50%), Max L∞: 0.020000
+
+FIRST BATCH ADVERSARIAL RESULTS:
+
+Image 0:
+  True class: accordion (idx: 401)
+  Original prediction: accordion (401) with 99.97% confidence
+  Adversarial prediction: Unknown (621) with 100.00% confidence
+  Attack successful: True
+  Perturbation magnitude: 0.089286
+
+Image 1:
+  True class: accordion (idx: 401)
+  Original prediction: accordion (401) with 98.68% confidence
+  Adversarial prediction: Unknown (753) with 100.00% confidence
+  Attack successful: True
+  Perturbation magnitude: 0.089286
+
+Image 2:
+  True class: accordion (idx: 401)
+  Original prediction: Unknown (819) with 84.45% confidence
+  Adversarial prediction: Unknown (819) with 100.00% confidence
+  Attack successful: False
+  Perturbation magnitude: 0.089286
+
+Image 3:
+  True class: accordion (idx: 401)
+  Original prediction: accordion (401) with 100.00% confidence
+  Adversarial prediction: Unknown (772) with 100.00% confidence
+  Attack successful: True
+  Perturbation magnitude: 0.089286
+
+Image 4:
+  True class: accordion (idx: 401)
+  Original prediction: Unknown (398) with 30.07% confidence
+  Adversarial prediction: Unknown (398) with 100.00% confidence
+  Attack successful: False
+  Perturbation magnitude: 0.089286
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 3.12%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 3.12%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 6.25%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 6.25%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 12.50%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 12.50%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 12.50%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 12.50%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 9.38%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 9.38%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 12.50%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 12.50%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 15.62%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 15.62%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 9.38%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 9.38%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 6.25%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 6.25%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 3.12%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 3.12%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 3.12%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 3.12%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 0.00%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 0.00%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 0.00%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 0.00%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 3.12%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 3.12%), Max L∞: 0.020000
+Starting PGD attack with epsilon=0.0200, iterations=20
+  Initial accuracy: 0.00%
+  Progress [11/20]: accuracy: 0.00%
+  Final accuracy: 0.00% (drop of 0.00%), Max L∞: 0.020000
+
+Attack Results:
+Maximum L-infinity distance: 0.020000
+Original Test Set - Top-1 Accuracy: 76.00%
+Original Test Set - Top-5 Accuracy: 94.20%
+Adversarial Test Set - Top-1 Accuracy: 0.00%
+Adversarial Test Set - Top-5 Accuracy: 0.00%
+Top-1 Accuracy Drop: 76.00%
+Top-5 Accuracy Drop: 94.20%
+Relative Top-1 Accuracy Drop: 100.00%
+Visualization saved to ./figures/task3/successful_attacks.png
+Successful attack examples saved to ./figures/task3/successful_attacks.png
+Adversarial perturbations visualization saved to ./figures/task3/adversarial_perturbations.png
+Results saved to logs/task3_results.json
+Saving adversarial examples to data/adversarial_test_set_2...
+Task 3 completed successfully!

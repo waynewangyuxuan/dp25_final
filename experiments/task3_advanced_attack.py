@@ -8,10 +8,35 @@ from PIL import Image
 from torchvision import datasets, transforms, models
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+import datetime
 
 # Add the project root to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.attacks.pgd import pgd_attack, targeted_class_selection, compute_linf_distance
+
+# Create logging directory if it doesn't exist
+log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logging")
+os.makedirs(log_dir, exist_ok=True)
+
+# Set up logging to both console and file
+log_filename = os.path.join(log_dir, f"task3_advanced_attack_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+class Logger:
+    def __init__(self, filename):
+        self.terminal = sys.stdout
+        self.log = open(filename, 'w')
+        
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+        self.log.flush()
+        
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+
+# Redirect stdout to both terminal and log file
+sys.stdout = Logger(log_filename)
+print(f"Logging to {log_filename}")
 
 # Set path to the dataset
 dataset_path = "./data/TestDataSet"
@@ -268,7 +293,8 @@ for images, labels in tqdm(dataloader, desc="Generating adversarial examples"):
     adversarial_images = pgd_attack(
         pretrained_model, images, attack_labels,
         epsilon=EPSILON, alpha=ALPHA, iterations=ITERATIONS,
-        targeted=TARGETED, random_start=RANDOM_START
+        targeted=TARGETED, random_start=RANDOM_START,
+        verbose=True  # Show progress during batch processing
     )
     
     # Calculate L-infinity distance between original and adversarial images
@@ -419,49 +445,56 @@ print("Results saved to logs/task3_results.json")
 
 # Save the adversarial examples to create "Adversarial Test Set 2"
 print("Saving adversarial examples to data/adversarial_test_set_2...")
-for i, (image, label) in enumerate(tqdm(dataset, desc="Saving adversarial examples")):
-    # Get folder name and image file name from the dataset
-    image_path = dataset.samples[i][0]
-    folder_name = os.path.basename(os.path.dirname(image_path))
-    image_name = os.path.basename(image_path)
-    
-    # Create the target directory if it doesn't exist
-    target_dir = os.path.join("data/adversarial_test_set_2", folder_name)
-    os.makedirs(target_dir, exist_ok=True)
-    
-    # Process the image through the attack
-    image = image.unsqueeze(0).to(device)  # Add batch dimension and move to device
-    
-    # Get corresponding ImageNet class index
-    folder_idx = dataset.class_to_idx[folder_name]
-    imagenet_idx = folder_to_imagenet_map[folder_name]
-    imagenet_label = torch.tensor([imagenet_idx]).to(device)
-    
-    # For targeted attack, get a target label
-    if TARGETED:
-        with torch.no_grad():
-            outputs = pretrained_model(image)
+
+# Create progress bar for all examples
+with tqdm(total=len(dataset), desc="Creating adversarial examples") as pbar:
+    for i, (image, label) in enumerate(dataset):
+        # Get folder name and image file name from the dataset
+        image_path = dataset.samples[i][0]
+        folder_name = os.path.basename(os.path.dirname(image_path))
+        image_name = os.path.basename(image_path)
         
-        # Select target label
-        target_label = targeted_class_selection(outputs, imagenet_label, strategy=TARGET_STRATEGY)
-        attack_label = target_label
-    else:
-        attack_label = imagenet_label
-    
-    # Generate adversarial example with PGD
-    adversarial_image = pgd_attack(
-        pretrained_model, image, attack_label,
-        epsilon=EPSILON, alpha=ALPHA, iterations=ITERATIONS,
-        targeted=TARGETED, random_start=RANDOM_START
-    )
-    
-    # Convert tensor to PIL image and save
-    adv_image = adversarial_image.squeeze(0)
-    # Denormalize
-    denorm_image = denormalize(adv_image)
-    # Convert to PIL image
-    denorm_image = (denorm_image * 255).astype(np.uint8)
-    img = Image.fromarray(denorm_image)
-    img.save(os.path.join(target_dir, image_name))
+        # Create the target directory if it doesn't exist
+        target_dir = os.path.join("data/adversarial_test_set_2", folder_name)
+        os.makedirs(target_dir, exist_ok=True)
+        
+        # Process the image through the attack
+        image = image.unsqueeze(0).to(device)  # Add batch dimension and move to device
+        
+        # Get corresponding ImageNet class index
+        folder_idx = dataset.class_to_idx[folder_name]
+        imagenet_idx = folder_to_imagenet_map[folder_name]
+        imagenet_label = torch.tensor([imagenet_idx]).to(device)
+        
+        # For targeted attack, get a target label
+        if TARGETED:
+            with torch.no_grad():
+                outputs = pretrained_model(image)
+            
+            # Select target label
+            target_label = targeted_class_selection(outputs, imagenet_label, strategy=TARGET_STRATEGY)
+            attack_label = target_label
+        else:
+            attack_label = imagenet_label
+        
+        # Generate adversarial example with PGD - use verbose=False instead of output suppression
+        adversarial_image = pgd_attack(
+            pretrained_model, image, attack_label,
+            epsilon=EPSILON, alpha=ALPHA, iterations=ITERATIONS,
+            targeted=TARGETED, random_start=RANDOM_START,
+            verbose=False  # Suppress progress output
+        )
+        
+        # Convert tensor to PIL image and save
+        adv_image = adversarial_image.squeeze(0)
+        # Denormalize
+        denorm_image = denormalize(adv_image)
+        # Convert to PIL image
+        denorm_image = (denorm_image * 255).astype(np.uint8)
+        img = Image.fromarray(denorm_image)
+        img.save(os.path.join(target_dir, image_name))
+        
+        # Update progress bar
+        pbar.update(1)
 
 print("Task 3 completed successfully!") 

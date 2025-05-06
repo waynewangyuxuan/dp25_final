@@ -8,6 +8,32 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
+import sys
+import datetime
+
+# Create logging directory if it doesn't exist
+log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "logging")
+os.makedirs(log_dir, exist_ok=True)
+
+# Set up logging to both console and file
+log_filename = os.path.join(log_dir, f"task1_baseline_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.log")
+class Logger:
+    def __init__(self, filename):
+        self.terminal = sys.stdout
+        self.log = open(filename, 'w')
+        
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+        self.log.flush()
+        
+    def flush(self):
+        self.terminal.flush()
+        self.log.flush()
+
+# Redirect stdout to both terminal and log file
+sys.stdout = Logger(log_filename)
+print(f"Logging to {log_filename}")
 
 # Set path to the dataset
 dataset_path = "./data/TestDataSet"

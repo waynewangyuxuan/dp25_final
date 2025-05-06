@@ -1,0 +1,11 @@
+{
+    "task": "Task 2: FGSM Attack",
+    "epsilon": 0.02,
+    "max_l_infinity_distance": 0.02000001072883606,
+    "original_top1_accuracy": 76.0,
+    "original_top5_accuracy": 94.2,
+    "adversarial_top1_accuracy": 6.8,
+    "adversarial_top5_accuracy": 11.8,
+    "top1_accuracy_drop": 69.2,
+    "top5_accuracy_drop": 82.4
+}

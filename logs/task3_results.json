@@ -1,0 +1,16 @@
+{
+    "task": "Task 3: PGD Attack",
+    "epsilon": 0.02,
+    "alpha": 0.004,
+    "iterations": 20,
+    "targeted": false,
+    "target_strategy": null,
+    "max_l_infinity_distance": 0.020000100135803223,
+    "original_top1_accuracy": 76.0,
+    "original_top5_accuracy": 94.2,
+    "adversarial_top1_accuracy": 0.0,
+    "adversarial_top5_accuracy": 0.0,
+    "top1_accuracy_drop": 76.0,
+    "top5_accuracy_drop": 94.2,
+    "relative_top1_drop": 100.0
+}

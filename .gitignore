@@ -30,9 +30,6 @@ ENV/
 
 # Project specific
 data/
-logs/
-figures/*.png
-figures/*.jpg
 checkpoints/
 .ipynb_checkpoints/
 
