@@ -38,18 +38,22 @@ make clean  # Clean generated files
 ```
 deep‑models‑jailbreak/
 ├── src/                       # Core implementation code
-│   ├── dataset.py             # Dataset loading utilities
-│   ├── metrics.py             # Evaluation metrics
-│   ├── viz.py                 # Visualization utilities
-│   └── attacks/               # Attack implementations
-│       ├── fgsm.py            # Single-step attack
-│       ├── pgd_full.py        # Iterative full-image attack
-│       ├── pgd_patch.py       # Iterative 32×32 patch attack
-│       └── utils.py           # Attack utilities
-├── experiments/               # Experiment scripts for each task
-├── configs/                   # Configuration files
-├── data/                      # Data directory (git-ignored)
-└── figures/                   # Generated visualizations
+│   ├── dataset.py            # Dataset loading utilities
+│   ├── metrics.py            # Evaluation metrics
+│   ├── viz.py                # Visualization utilities
+│   ├── __init__.py           # Package initialization
+│   └── attacks/              # Attack implementations
+├── experiments/              # Experiment scripts for each task
+├── configs/                  # Configuration files
+├── data/                     # Data directory (git-ignored)
+├── logs/                     # Experiment logs and metrics (git-ignored)
+├── figures/                  # Generated visualizations 
+├── checkpoints/              # Model checkpoints and saved states (git-ignored)
+├── logging/                  # Logging configuration and utilities
+├── setup.sh                  # Environment setup script
+├── act.sh                    # Environment activation script
+├── Makefile                  # Build automation
+└── requirements.txt          # Python dependencies
 ```
 
 ## Results Summary
