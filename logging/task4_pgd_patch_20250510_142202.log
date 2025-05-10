@@ -1,0 +1,50 @@
+Logging to /scratch/yw5954/dp25_final/logging/task4_pgd_patch_20250510_142202.log
+Loading model...
+Model loaded with output size: 1000
+Loading dataset...
+
+DEBUG INFO:
+Dataset classes: ['n02672831', 'n02676566', 'n02687172', 'n02690373', 'n02692877']... (total: 100)
+Number of samples: 500
+First few class_idx_to_name entries: [(401, 'accordion'), (402, 'acoustic guitar'), (403, 'aircraft carrier'), (404, 'airliner'), (405, 'airship')]
+Class 0: n02672831
+Class 1: n02676566
+Class 2: n02687172
+Class 3: n02690373
+Class 4: n02692877
+Preparing data for attack...
+Evaluating original images...
+Original Top-1 Accuracy: 76.00%
+Original Top-5 Accuracy: 94.20%
+Generating patch-based adversarial examples with ε=0.8...
+Iteration 1/20: Current accuracy: 73.00%
+Iteration 2/20: Current accuracy: 60.20%
+Iteration 3/20: Current accuracy: 48.60%
+Iteration 20/20: Current accuracy: 6.60%
+Image 0 (patch at 116,79):
+  L-infinity distance in pixel space: 0.800000
+  Max diff per channel - R: 0.800000, G: 0.800000, B: 0.800000
+Image 1 (patch at 85,85):
+  L-infinity distance in pixel space: 0.800000
+  Max diff per channel - R: 0.800000, G: 0.800000, B: 0.800000
+Image 2 (patch at 112,95):
+  L-infinity distance in pixel space: 0.800000
+  Max diff per channel - R: 0.800000, G: 0.800000, B: 0.800000
+Attack Summary:
+  Epsilon: 0.800000
+  Max L-infinity distance: 0.800000
+  Average L-infinity distance: 0.794247
+Verifying L-infinity distances...
+Maximum allowed epsilon: 0.8
+Calculated maximum L-infinity distance: 0.800000
+✓ L-infinity distances are within the epsilon bound
+Evaluating adversarial examples...
+Adversarial Top-1 Accuracy: 6.60%
+Adversarial Top-5 Accuracy: 39.60%
+Attack Success Rate: 82.00%
+Generating visualizations...
+Successful attack examples saved to figures/task4/successful_attacks.png
+L-infinity distance histogram saved to figures/task4/l_infinity_distances.png
+Saving adversarial images to data/adversarial_test_set_3...
+Results saved to logs/task4_results.json
+Task 4 completed!

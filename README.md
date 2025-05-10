@@ -2,6 +2,16 @@
 
 This project focuses on crafting adversarial attacks on production-grade image classifiers to degrade their performance while keeping perturbations imperceptible. The target model is a ResNet-34 trained on ImageNet-1K.
 
+## Important Directories
+
+- 📁 `src/` - Core implementation code and attack algorithms
+- 📁 `experiments/` - Scripts for running different attack experiments
+- 📁 `data/` - Dataset storage (git-ignored)
+- 📁 `logs/` - Experiment logs and metrics (git-ignored)
+- 📁 `logging/` - Logging configuration and utilities
+- 📁 `figures/` - Generated visualizations and plots (git-ignored)
+- 📁 `checkpoints/` - Model checkpoints and saved states (git-ignored)
+
 ## Project Structure
 
 ```
