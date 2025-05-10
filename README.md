@@ -28,8 +28,8 @@ make clean  # Clean generated files
 - 📁 `src/` - Core implementation code and attack algorithms
 - 📁 `experiments/` - Scripts for running different attack experiments
 - 📁 `data/` - Dataset storage (git-ignored)
-- 📁 `logs/` - Experiment logs and metrics (git-ignored)
-- 📁 `logging/` - Logging configuration and utilities
+- 📁 `logs/` - Experiment logs, metrics, and results 
+- 📁 `logging/` - Terminal stdout when running scripts
 - 📁 `figures/` - Generated visualizations and plots (git-ignored)
 - 📁 `checkpoints/` - Model checkpoints and saved states (git-ignored)
 
